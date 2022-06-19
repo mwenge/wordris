@@ -111,9 +111,9 @@ function generateTiles(words, rowLength) {
   return { plane: plane, tiles: generatedTiles}
 }
 
-function tilePlane() {
+function tilePlane(rows) {
   const rPos = getRandomInt(allWords.length - 20);
-  const words = shuffle(allWords).slice(rPos,rPos + 11);
+  const words = shuffle(allWords).slice(rPos,rPos + rows);
   const wordMatrix = words.map(x => x.split(''));
   console.log(Array.from(wordMatrix).reverse());
 

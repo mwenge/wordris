@@ -1,3 +1,7 @@
+:root {
+  --cell-width: 2.5vh;
+  --current-cell-offset: 6vh;
+}
 html,body {
   height: 100%;
   background-color: black;
@@ -8,16 +12,50 @@ html,body {
   width: 100%;
   text-align: center;
   color: white;
-  font-size: 40px;
+  font-size: 3vh;
+}
+.score {
+  display: none;
+  border: 1px solid white;
+  background-color: grey;
+  color: white;
+  position: absolute;
+  width: 50%;
+  top: 50%;
+  left: 50%;
+  height: 10%;
+  transform: translate(-50%);
+  border-radius: 5px;
+  padding-top: 10px;
+}
+.button {
+  text-align: center;
+}
+.tip {
+  font-size: 10px;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%);
+  color: white;
+  text-align: center;
+}
+.container {
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 }
 .grid {
+  overflow: hidden;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(10, 1fr);
   gap: 0.8vh;
   position: absolute;
-  bottom: 20px;
-  left: 10px;
+  bottom: 50px;
 }
 .current {
   display: grid;
@@ -25,15 +63,16 @@ html,body {
   grid-template-rows: repeat(2, 1fr);
   gap: 1px;
   position: absolute;
-  right: 20px;
-  top: 100px;
+  top: var(--current-cell-offset);
+  left: 50%;
+  transform: translate(-50%);
 }
 .currentcell, .cell {
   color: white;
-  border: 2px solid white;
-  height: 3vh;
-  line-height: 3vh;
-  width: 3vh;
+  border: 1px solid white;
+  height: var(--cell-width);
+  line-height: var(--cell-width);
+  width: var(--cell-width);
   font-size: 2.7vh;
   padding: 10px;
   text-align: center;

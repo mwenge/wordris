@@ -35,15 +35,44 @@ function shuffle(array) {
   return array;
 }
 
-let startTile = 0;
+function calculateScore(guesses, answers) {
+  let matches = guesses.map((e,i) => e.every((l,j) => l == answers[i][j]) ? 1 : 0)
+                .reduce((p,c) => p + c);
+  console.log("Result:", matches);
+  return matches;
+}
+
+function showScore(playerScore) {
+  score.style.display = 'block';
+  result.textContent = "Score: " + playerScore;
+}
+
+let startTile;
 let currentTile;
 let info;
+let playerGuesses = [];
+let defaultRows = 10;
+score.onclick = init;
+
 function init() {
-  info = tilePlane();
+  score.style.display = 'none';
+  grid.innerHTML = '';
+  startTile = 0;
+  info = tilePlane(defaultRows);
+  playerGuesses = new Array(defaultRows);
+  for (let i = 0; i < defaultRows; i++) {
+    playerGuesses[i] = new Array(5).fill('');
+  }
 
   // Make sure the tiles don't appear in left-to-right order.
   let randomizedTiles = [... new Set(info.plane.map(x => shuffle([... new Set(x)])).flat())];
   function getNextTile() {
+    if (startTile == info.tiles.length - 1) {
+      console.log("Finished!\n",playerGuesses);
+      let playerScore = calculateScore(playerGuesses, info.wordMatrix);
+      showScore(playerScore);
+      return;
+    }
     currentTile = showCurrent(info.tiles[randomizedTiles[startTile]], current, 'current');
     startTile++;
   }
@@ -75,9 +104,20 @@ function init() {
       for (var j = 0; j < currentTile.coords.length; j++) {
         let nr = r + currentTile.coords[j][0];
         let nc = col + currentTile.coords[j][1] - offset;
+        if (nr > info.plane.length || nc > info.plane[0].length) {
+          console.log("Invalid placement");
+          return;
+        }
+      }
+
+      for (var j = 0; j < currentTile.coords.length; j++) {
+        let nr = r + currentTile.coords[j][0];
+        let nc = col + currentTile.coords[j][1] - offset;
 
         let lc = document.querySelector('[row="'+nr+'"][column="'+nc+'"]')
-        lc.textContent = currentTile.letters[j];
+        let ltr = currentTile.letters[j];
+        lc.textContent = ltr;
+        playerGuesses[nr-1][nc-1] = ltr;
         if (lc.textContent == info.wordMatrix[nr-1][nc-1]) {
           lc.style.backgroundColor = 'green';
         } else {
