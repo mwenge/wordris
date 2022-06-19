@@ -1,4 +1,5 @@
 import { tilePlane } from './tiles.js';
+import { wordrisTips } from './tips.js';
 
 function showCurrent(tile, whichTile, tileName) {
   //Convert the absolute co-ordinates of the tile to relative co-ordinates
@@ -51,7 +52,7 @@ let startTile;
 let currentTile;
 let info;
 let playerGuesses = [];
-let defaultRows = 10;
+let defaultRows = 8;
 score.onclick = init;
 
 function init() {
@@ -73,6 +74,7 @@ function init() {
       showScore(playerScore);
       return;
     }
+    tip.textContent = wordrisTips.next().value;
     currentTile = showCurrent(info.tiles[randomizedTiles[startTile]], current, 'current');
     startTile++;
   }
@@ -101,10 +103,12 @@ function init() {
         offset = 1;
       }
 
+      // Detect invalid placement.
       for (var j = 0; j < currentTile.coords.length; j++) {
         let nr = r + currentTile.coords[j][0];
         let nc = col + currentTile.coords[j][1] - offset;
-        if (nr > info.plane.length || nc > info.plane[0].length) {
+        if (nr > info.plane.length || nc > info.plane[0].length
+            || nc < 1) {
           console.log("Invalid placement");
           return;
         }

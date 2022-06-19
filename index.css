@@ -1,5 +1,5 @@
 :root {
-  --cell-width: 2.5vh;
+  --cell-width: 2.7vh;
   --current-cell-offset: 6vh;
 }
 html,body {
@@ -33,11 +33,6 @@ html,body {
 }
 .tip {
   font-size: 10px;
-  position: absolute;
-  width: 100%;
-  bottom: 0px;
-  left: 50%;
-  transform: translate(-50%);
   color: white;
   text-align: center;
 }
@@ -52,20 +47,17 @@ html,body {
   overflow: hidden;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-rows: repeat(8, 1fr);
   gap: 0.8vh;
-  position: absolute;
-  bottom: 50px;
+  padding-bottom: var(--cell-width);
 }
 .current {
+  padding-top: calc(var(--cell-width) * 3);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 1px;
-  position: absolute;
-  top: var(--current-cell-offset);
-  left: 50%;
-  transform: translate(-50%);
+  padding-bottom: calc(var(--cell-width) * 2);
 }
 .currentcell, .cell {
   color: white;
@@ -73,7 +65,7 @@ html,body {
   height: var(--cell-width);
   line-height: var(--cell-width);
   width: var(--cell-width);
-  font-size: 2.7vh;
+  font-size: var(--cell-width);
   padding: 10px;
   text-align: center;
   vertical-align: middle;
