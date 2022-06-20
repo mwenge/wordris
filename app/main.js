@@ -87,6 +87,9 @@ function init() {
       d.setAttribute("row", r + 1);
       d.setAttribute("column", c + 1);
       grid.appendChild(d);
+      if (r < 2) {
+        d.className += " activecell";
+      }
     }
   }
 
@@ -97,7 +100,9 @@ function init() {
     cell.onclick = function(e) {
       let r = parseInt(e.target.getAttribute('row'));
       let col = parseInt(e.target.getAttribute('column'));
+      console.log(e.target.className, r, col);
 
+      // Fix the offset of the tile we're placing so we can place it properly.
       let offset = 0;
       if (!currentTile.coords.some(x => !x[0] && !x[1])) {
         offset = 1;
@@ -127,6 +132,12 @@ function init() {
         } else {
           lc.style.backgroundColor = 'red';
         }
+        // Make sure the row above is now visible.
+        for (var k = 0; k < info.plane[0].length; k++) {
+          let lc = document.querySelector('[row="'+(nr+1)+'"][column="'+(k+1)+'"]')
+          if (lc) {lc.className += " activecell";}
+        }
+
       }
       getNextTile();
     }

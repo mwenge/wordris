@@ -61,7 +61,7 @@ html,body {
 }
 .currentcell, .cell {
   color: white;
-  border: 1px solid white;
+  border: 1px solid #413839;
   height: var(--cell-width);
   line-height: var(--cell-width);
   width: var(--cell-width);
@@ -71,8 +71,16 @@ html,body {
   vertical-align: middle;
   border-radius: 4px;
   text-transform: uppercase;
+  pointer-events: none;
 }
+.activecell {
+  border: 1px solid white;
+  pointer-events: all;
+  cursor: pointer;
+}
+
 .currentcell {
+  border: 1px solid white;
   background-color: grey;
 }
 .emptycell {
