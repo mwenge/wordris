@@ -78,6 +78,9 @@ html,body {
   pointer-events: all;
   cursor: pointer;
 }
+.activecell:hover {
+  background-color: #413839;
+}
 
 .currentcell {
   border: 1px solid white;
