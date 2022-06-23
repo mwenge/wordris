@@ -1,5 +1,15 @@
 import { allWords } from './words.js';
 
+// This gives us a sequence of tiles from bottom to top, but not in a left-to-right
+// or right to left order.
+function* shuffledTiles(plane, generatedTiles) {
+    let randomizedTiles = [... new Set(plane.map(x => shuffle([... new Set(x)])).flat())];
+    for (let i = 0; i < randomizedTiles.length; i++) {
+      yield generatedTiles[randomizedTiles[i]];
+    }
+    return null;
+}
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -96,7 +106,11 @@ function generateTiles(words, rowLength) {
       };
     }
   }
-  return { plane: plane, tiles: generatedTiles}
+  return {
+    plane: plane,
+    tiles: generatedTiles,
+    shuffledTiles: shuffledTiles(plane, generatedTiles),
+  };
 }
 
 function tilePlane(rows) {
