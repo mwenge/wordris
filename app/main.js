@@ -1,8 +1,15 @@
-import { tilePlane } from './tiles.js';
+import { tilePlane, updateProgress, todaysProgress } from './tiles.js';
 import { wordrisTips } from './tips.js';
 
 const MAX_ROWS = 8;
-score.onclick = init;
+
+function clearCells() {
+  // Clear the square
+  Array.from(current.children).forEach(child => {
+    child.textContent = '';
+    child.className = 'emptycell';
+  });
+}
 
 // Get the next piece to place and display it.
 function showNextPiece(tile, info) {
@@ -12,11 +19,7 @@ function showNextPiece(tile, info) {
   let mc = Math.min(...tile.map(x => x[1])); 
   let coords = tile.map(x => [x[0] - mr, x[1] - mc]);
 
-  // Clear the square
-  Array.from(current.children).forEach(child => {
-    child.textContent = '';
-    child.className = 'emptycell';
-  });
+  clearCells();
 
   let letters = [];
   coords.forEach((co, i) => {
@@ -44,19 +47,23 @@ function showScore(playerScore) {
 }
 
 // Set up a new game.
-function init() {
+async function init() {
 
   //  The player has made a move, so get the next piece or end the game.
   function advanceNextMove() {
-    let nextTile = info.shuffledTiles.next().value;
-    if (!nextTile) {
+    let nextTileInfo = info.shuffledTiles.next();
+    updateProgress(playerGuesses, nextTileInfo);
+
+    if (nextTileInfo.done) {
+      clearCells();
       console.log("Finished!\n",playerGuesses);
       let playerScore = calculateScore(playerGuesses, info.wordMatrix);
       showScore(playerScore);
       return null;
     }
     tip.textContent = wordrisTips.next().value;
-    let currentTile = showNextPiece(nextTile, info);
+    let currentTile = showNextPiece(nextTileInfo.value.tile, info);
+
 
     // Blur out rows that are not in play.
     if (!currentTile) {
@@ -124,17 +131,40 @@ function init() {
     currentTile = advanceNextMove();
 
   }
+  async function loadState() {
+    let p = await todaysProgress();
+    if (!p) {
+      // Set up the first move.
+      return;
+    }
+
+    playerGuesses = p.playerGuesses;
+
+    p.playerGuesses.forEach((e,r) => { 
+      e.forEach((f,c) => {
+        if (f) {
+          // Populate the tile with the guess.
+          let lc = document.querySelector('[row="'+(r+1)+'"][column="'+(c+1)+'"]')
+          lc.textContent = f;
+
+          // Update the tile's color.
+          if (lc.textContent == info.wordMatrix[r][c]) {
+            lc.style.backgroundColor = 'green';
+          } else {
+            lc.style.backgroundColor = 'red';
+          }
+        }
+      });
+    });
+    for (var i = 0; i < p.nextTile.value.used; i++) {
+      info.shuffledTiles.next();
+    }
+  }
 
   score.style.display = 'none';
 
   // Tile the board.
   let info = tilePlane(MAX_ROWS);
-
-  // This will record the positions where the player has placed the pieces.
-  let playerGuesses = new Array(MAX_ROWS);
-  for (let i = 0; i < MAX_ROWS; i++) {
-    playerGuesses[i] = new Array(5).fill('');
-  }
 
   // Set up the board from bottom to top.
   grid.innerHTML = '';
@@ -149,7 +179,13 @@ function init() {
     }
   }
 
-  // Set up the first move.
+  // This will record the positions where the player has placed the pieces.
+  let playerGuesses = new Array(MAX_ROWS);
+  for (let i = 0; i < MAX_ROWS; i++) {
+    playerGuesses[i] = new Array(5).fill('');
+  }
+  await loadState();
   let currentTile = advanceNextMove();
 }
+
 init();

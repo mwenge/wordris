@@ -100,4 +100,8 @@ html,body {
 }
 .emptycell {
   border: none;
+  height: var(--cell-width);
+  line-height: var(--cell-width);
+  width: var(--cell-width);
+  padding: 10px;
 }

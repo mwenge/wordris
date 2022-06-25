@@ -6,6 +6,18 @@ today.setHours(0, 0, 0, 0);
 const seed = today.getTime();
 let rng = new alea(seed);
 
+export async function updateProgress(playerGuesses, nextTile) {
+  await localforage.setItem(seed, {
+    playerGuesses: playerGuesses,
+    nextTile: nextTile
+  });
+}
+
+export async function todaysProgress() {
+  let p = await localforage.getItem(seed);
+  return p;
+}
+
 function todaysBoard(rows) {
   let words = [];
   [...Array(rows).keys()].forEach(x => {
@@ -19,11 +31,15 @@ function todaysBoard(rows) {
 // or right to left order. Using arng() makes sure the randomness is deterministic
 // and seeded by today's date.
 function* shuffledTiles(plane, generatedTiles) {
-    let randomizedTiles = [... new Set(plane.map(x => shuffle([... new Set(x)])).flat())];
-    for (let i = 0; i < randomizedTiles.length; i++) {
-      yield generatedTiles[randomizedTiles[i]];
-    }
-    return null;
+  let used = 0;
+  let randomizedTiles = [... new Set(plane.map(x => shuffle([... new Set(x)])).flat())];
+  for (let i = 0; i < randomizedTiles.length; i++) {
+    yield { 
+      tile: generatedTiles[randomizedTiles[i]],
+      used: used++
+    };
+  }
+  return { tile: null, used: used };
 }
 
 function shuffle(array) {
