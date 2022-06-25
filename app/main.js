@@ -56,7 +56,24 @@ function init() {
       return null;
     }
     tip.textContent = wordrisTips.next().value;
-    return showNextPiece(nextTile, info);
+    let currentTile = showNextPiece(nextTile, info);
+
+    // Blur out rows that are not in play.
+    if (!currentTile) {
+      return currentTile;
+    }
+    const rowsInPlay = currentTile.abscoords.map(x => x[0]+1);
+    info.rows.forEach((x,r) => {
+      let lcs = document.querySelectorAll('[row="'+(r+1)+'"]')
+      lcs.forEach(lc => {
+        if (rowsInPlay.includes(r+1)) {
+          lc.className = "cell activecell";
+        } else {
+          lc.className = "cell completecell";
+        }
+      });
+    });
+    return currentTile;
   }
 
   // Place the piece in the position selected by the player.
@@ -74,7 +91,7 @@ function init() {
     for (const coord of currentTile.coords) {
       let nr = r + coord[0];
       let nc = col + coord[1] - offset;
-      if (nr > info.plane.length || nc > info.plane[0].length
+      if (nr > info.rows.length || nc > info.rows[0].length
           || nc < 1) {
         console.log("Invalid placement");
         return;
@@ -101,26 +118,11 @@ function init() {
       // Update our record of the player's guesses.
       playerGuesses[nr-1][nc-1] = ltr;
 
-      // Make sure the row above is now visible.
-      for (var k = 0; k < info.plane[0].length; k++) {
-        let lc = document.querySelector('[row="'+(nr+1)+'"][column="'+(k+1)+'"]')
-        if (lc) { lc.classList.add("activecell"); }
-      }
     });
 
     // Get the next piece.
     currentTile = advanceNextMove();
 
-    if (!currentTile) {
-      return;
-    }
-    // Blur out completed rows
-    const lowestRow = Math.min(...currentTile.abscoords.map(x => x[0]));
-    const completedRows = [...Array(lowestRow+1).keys()];
-    completedRows.forEach(x => {
-      let lcs = document.querySelectorAll('[row="'+(x)+'"]')
-      lcs.forEach(lc => lc.classList.add("completecell"));
-    });
   }
 
   score.style.display = 'none';
@@ -136,17 +138,13 @@ function init() {
 
   // Set up the board from bottom to top.
   grid.innerHTML = '';
-  for (let r = info.plane.length - 1; r >= 0; r--) {
-    for (let c = 0; c < info.plane[r].length; c++) {
+  for (let r = info.rows.length - 1; r >= 0; r--) {
+    for (let c = 0; c < info.rows[r].length; c++) {
       let d = document.createElement("div"); 
       d.className = "cell";
       d.setAttribute("row", r + 1);
       d.setAttribute("column", c + 1);
       grid.appendChild(d);
-      // Only the bottom two rows are active at first.
-      if (r < 2) {
-        d.className += " activecell";
-      }
       d.onclick = placePiece;
     }
   }

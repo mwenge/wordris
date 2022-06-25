@@ -1,10 +1,12 @@
 import { allWords } from './words.js';
 
+// Set today's seed
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const seed = today.getTime();
+let rng = new alea(seed);
+
 function todaysBoard(rows) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const seed = today.getTime();
-  let rng = new alea(seed);
   let words = [];
   [...Array(rows).keys()].forEach(x => {
     let n = (rng.int32() >>> 0) % allWords.length;
@@ -14,7 +16,8 @@ function todaysBoard(rows) {
 }
 
 // This gives us a sequence of tiles from bottom to top, but not in a left-to-right
-// or right to left order.
+// or right to left order. Using arng() makes sure the randomness is deterministic
+// and seeded by today's date.
 function* shuffledTiles(plane, generatedTiles) {
     let randomizedTiles = [... new Set(plane.map(x => shuffle([... new Set(x)])).flat())];
     for (let i = 0; i < randomizedTiles.length; i++) {
@@ -25,7 +28,7 @@ function* shuffledTiles(plane, generatedTiles) {
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
@@ -120,7 +123,7 @@ function generateTiles(words, rowLength) {
     }
   }
   return {
-    plane: plane,
+    rows: plane,
     tiles: generatedTiles,
     shuffledTiles: shuffledTiles(plane, generatedTiles),
   };
@@ -133,7 +136,7 @@ function tilePlane(rows) {
   console.log(Array.from(wordMatrix).reverse());
 
   const result = generateTiles(words, words[0].length);
-  console.log(Array.from(result.plane).reverse());
+  console.log(Array.from(result.rows).reverse());
   console.log(result.tiles);
   result.wordMatrix = wordMatrix;
   return result;
