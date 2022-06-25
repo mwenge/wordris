@@ -18,24 +18,69 @@ html,body {
   width: 100%;
   text-align: center;
   color: white;
-  font-size: 3vh;
+  font-size: 4vh;
+  font-family: 'Abril Fatface', cursive;
 }
-.score {
-  display: none;
-  border: 1px solid white;
-  background-color: grey;
+.copied {
+  visibility: hidden;
+  background-color: #121213;
   color: white;
   position: absolute;
-  width: 50%;
-  top: 50%;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%);
+  border-radius: 5px;
+  padding: 5px;
+}
+.visible {
+  visibility: visible;
+}
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 2s, opacity 2s linear;
+}
+.resultcontainer {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left:0;
+}
+.result {
+  background-color: #121213;
+  color: white;
+  position: absolute;
+  min-width:30%;
+  max-width:30%;
+  top: 30%;
   left: 50%;
   height: 10%;
   transform: translate(-50%);
   border-radius: 5px;
+  padding: 20px;
+}
+.share {
+  display: flex;
+  background-color: green;
+  text-transform: uppercase;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 20px;
   padding-top: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+  cursor: pointer;
+}
+.shareicon {
+  color: white;
 }
 .button {
   text-align: center;
+  width: 100%;
 }
 .tip {
   font-size: 15px;
@@ -50,6 +95,7 @@ html,body {
   flex-grow: 1;
 }
 .grid {
+  position: relative;
   overflow: hidden;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -88,7 +134,6 @@ html,body {
   border: 1px solid white;
   pointer-events: none;
   filter: blur(0.8px);
-
 }
 .activecell:hover {
   background-color: #413839;
@@ -104,4 +149,11 @@ html,body {
   line-height: var(--cell-width);
   width: var(--cell-width);
   padding: 10px;
+}
+.flip {
+  perspective: 1000px;
+  transform: rotateY(360deg);
+  transition: transform .85s ease-in-out;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
 }

@@ -9,6 +9,7 @@ function clearCells() {
     child.textContent = '';
     child.className = 'emptycell';
   });
+  document.body.offsetTop;
 }
 
 // Get the next piece to place and display it.
@@ -28,7 +29,7 @@ function showNextPiece(tile, info) {
     let letter = info.wordMatrix[tile[i][0]][tile[i][1]];
     letters.push(letter);
     cell.textContent = letter;
-    cell.className = 'currentcell';
+    cell.className = 'currentcell flip';
   });
   let currentTileInfo = { coords: coords, letters: letters, abscoords: tile };
   return currentTileInfo;
@@ -38,12 +39,41 @@ function calculateScore(guesses, answers) {
   const matches = guesses
     .map((e,i) => e.every((l,j) => l == answers[i][j]) ? 1 : 0)
     .reduce((p,c) => p + c);
-  return matches;
+
+  const guessesForSharing = guesses
+    .map((e,i) => e.map((l,j) => {
+      if (l == '') {
+        return '⬛';
+      } else if (l == answers[i][j]) {
+        return '🟩';
+      }
+      return '🟥';
+    }))
+    .reverse()
+    .map(e => e.join(''))
+    .join('\n');
+  return {
+    score: matches,
+    guesses: guessesForSharing
+  }
 }
 
 function showScore(playerScore) {
-  score.style.display = 'block';
-  result.textContent = "Score: " + playerScore;
+  grid.style.filter = "blur(0.9px)";
+  resultcontainer.style.display = 'block';
+  score.textContent = "Score: " + playerScore.score;
+  share.onclick = ()=> {
+    navigator.clipboard.writeText(
+`Wordris ${playerScore.score}/8\n
+${playerScore.guesses}\n 
+https://mwenge.github.io/wordris`
+    );
+    copied.className = "copied visible";
+    document.body.offsetTop;
+    setTimeout(()=> {
+      copied.className = "copied hidden";
+    }, 1000);
+  }; 
 }
 
 // Set up a new game.
@@ -158,10 +188,9 @@ async function init() {
     });
     for (var i = 0; i < p.nextTile.value.used; i++) {
       info.shuffledTiles.next();
+      wordrisTips.next();
     }
   }
-
-  score.style.display = 'none';
 
   // Tile the board.
   let info = tilePlane(MAX_ROWS);
