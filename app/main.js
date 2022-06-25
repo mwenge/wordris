@@ -27,7 +27,7 @@ function showNextPiece(tile, info) {
     cell.textContent = letter;
     cell.className = 'currentcell';
   });
-  let currentTileInfo = { coords: coords, letters: letters };
+  let currentTileInfo = { coords: coords, letters: letters, abscoords: tile };
   return currentTileInfo;
 }
 
@@ -53,7 +53,7 @@ function init() {
       console.log("Finished!\n",playerGuesses);
       let playerScore = calculateScore(playerGuesses, info.wordMatrix);
       showScore(playerScore);
-      return;
+      return null;
     }
     tip.textContent = wordrisTips.next().value;
     return showNextPiece(nextTile, info);
@@ -104,11 +104,23 @@ function init() {
       // Make sure the row above is now visible.
       for (var k = 0; k < info.plane[0].length; k++) {
         let lc = document.querySelector('[row="'+(nr+1)+'"][column="'+(k+1)+'"]')
-        if (lc) {lc.className += " activecell";}
+        if (lc) { lc.classList.add("activecell"); }
       }
-
     });
+
+    // Get the next piece.
     currentTile = advanceNextMove();
+
+    if (!currentTile) {
+      return;
+    }
+    // Blur out completed rows
+    const lowestRow = Math.min(...currentTile.abscoords.map(x => x[0]));
+    const completedRows = [...Array(lowestRow+1).keys()];
+    completedRows.forEach(x => {
+      let lcs = document.querySelectorAll('[row="'+(x)+'"]')
+      lcs.forEach(lc => lc.classList.add("completecell"));
+    });
   }
 
   score.style.display = 'none';

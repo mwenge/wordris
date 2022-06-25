@@ -1,5 +1,18 @@
 import { allWords } from './words.js';
 
+function todaysBoard(rows) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const seed = today.getTime();
+  let rng = new alea(seed);
+  let words = [];
+  [...Array(rows).keys()].forEach(x => {
+    let n = (rng.int32() >>> 0) % allWords.length;
+    words.push(allWords[n]);
+  });
+  return words;
+}
+
 // This gives us a sequence of tiles from bottom to top, but not in a left-to-right
 // or right to left order.
 function* shuffledTiles(plane, generatedTiles) {
@@ -114,8 +127,8 @@ function generateTiles(words, rowLength) {
 }
 
 function tilePlane(rows) {
-  const rPos = getRandomInt(allWords.length - 20);
-  const words = shuffle(allWords).slice(rPos,rPos + rows);
+  const words = todaysBoard(rows);
+  console.log(words);
   const wordMatrix = words.map(x => x.split(''));
   console.log(Array.from(wordMatrix).reverse());
 

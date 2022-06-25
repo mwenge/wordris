@@ -2,6 +2,12 @@
   --cell-width: 2.7vh;
   --current-cell-offset: 6vh;
 }
+@font-face {
+  font-family: 'pump';
+  src: url('assets/PumpRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 html,body {
   height: 100%;
   background-color: black;
@@ -77,6 +83,12 @@ html,body {
   border: 1px solid white;
   pointer-events: all;
   cursor: pointer;
+}
+.completecell {
+  border: 1px solid white;
+  pointer-events: none;
+  filter: blur(0.8px);
+
 }
 .activecell:hover {
   background-color: #413839;
