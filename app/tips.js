@@ -36,7 +36,7 @@ export const scoreComments = [
     "OK, you are not a Niall but still not a Robert."
   ],
   [ // 7
-    "Congratulations, you are nearly a Robert."
+    "So close, you are nearly a Robert."
   ],
   [ // 8
     "Congratulations, you are a Robert."

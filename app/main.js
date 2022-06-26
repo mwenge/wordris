@@ -1,7 +1,8 @@
-import { tilePlane, updateProgress, todaysProgress } from './tiles.js';
+import { tilePlane, updateProgress, todaysProgress, boardNumber } from './tiles.js';
 import { wordrisTips, scoreComments } from './tips.js';
 
 const MAX_ROWS = 8;
+const MAX_COLS = 5;
 
 function clearCells() {
   // Clear the square
@@ -36,9 +37,10 @@ function showNextPiece(tile, info) {
 }
 
 function calculateScore(guesses, answers) {
+  const flatAnswers = answers.flat();
   const matches = guesses
-    .map((e,i) => e.every((l,j) => l == answers[i][j]) ? 1 : 0)
-    .reduce((p,c) => p + c);
+    .flat()
+    .reduce((p,l,j) => (l == flatAnswers[j] ? 1 : 0) + p, 0);
 
   const guessesForSharing = guesses
     .map((e,i) => e.map((l,j) => {
@@ -61,11 +63,11 @@ function calculateScore(guesses, answers) {
 function showScore(playerScore) {
   grid.style.filter = "blur(0.9px)";
   resultcontainer.style.display = 'block';
-  score.textContent = "Score: " + playerScore.score;
-  comment.textContent = scoreComments[playerScore.score];
+  score.textContent = `Score: ${playerScore.score}/${MAX_ROWS*MAX_COLS}`;
+  comment.textContent = scoreComments[parseInt(playerScore.score/MAX_COLS, 10)];
   share.onclick = ()=> {
     navigator.clipboard.writeText(
-`Wordris ${playerScore.score}/8\n
+`Wordris ${boardNumber()} ${playerScore.score}/${MAX_ROWS*MAX_COLS}\n
 ${playerScore.guesses}\n 
 https://mwenge.github.io/wordris`
     );
@@ -212,7 +214,7 @@ async function init() {
   // This will record the positions where the player has placed the pieces.
   let playerGuesses = new Array(MAX_ROWS);
   for (let i = 0; i < MAX_ROWS; i++) {
-    playerGuesses[i] = new Array(5).fill('');
+    playerGuesses[i] = new Array(MAX_COLS).fill('');
   }
   await loadState();
   let currentTile = advanceNextMove();

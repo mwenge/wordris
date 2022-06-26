@@ -6,6 +6,13 @@ today.setHours(0, 0, 0, 0);
 const seed = today.getTime();
 let rng = new alea(seed);
 
+export function boardNumber() {
+  const DAYS_FACTOR = 86400000;
+  const start = new Date(2022, 5, 21);
+  const board = (today - start) / DAYS_FACTOR;
+  return board;
+}
+
 export async function updateProgress(playerGuesses, nextTile) {
   await localforage.setItem(seed, {
     playerGuesses: playerGuesses,
