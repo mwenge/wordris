@@ -1,5 +1,5 @@
 import { tilePlane, updateProgress, todaysProgress } from './tiles.js';
-import { wordrisTips } from './tips.js';
+import { wordrisTips, scoreComments } from './tips.js';
 
 const MAX_ROWS = 8;
 
@@ -62,6 +62,7 @@ function showScore(playerScore) {
   grid.style.filter = "blur(0.9px)";
   resultcontainer.style.display = 'block';
   score.textContent = "Score: " + playerScore.score;
+  comment.textContent = scoreComments[playerScore.score];
   share.onclick = ()=> {
     navigator.clipboard.writeText(
 `Wordris ${playerScore.score}/8\n

@@ -12,3 +12,33 @@ function* getNext(array) {
 }
 
 export const wordrisTips = getNext(tips);
+
+export const scoreComments = [
+  [ //0
+    "Commiserations, you are a Niall."
+  ],
+  [ // 1
+    "Commiserations, you are still a Niall."
+  ],
+  [ // 2
+    "Commiserations, you are still a Niall."
+  ],
+  [ // 3
+    "Commiserations, you are still a Niall."
+  ],
+  [ // 4
+    "Mmm, half-way there."
+  ],
+  [ // 5
+    "OK, you are no longer a Niall."
+  ],
+  [ // 6
+    "OK, you are not a Niall but still not a Robert."
+  ],
+  [ // 7
+    "Congratulations, you are nearly a Robert."
+  ],
+  [ // 8
+    "Congratulations, you are a Robert."
+  ],
+];
