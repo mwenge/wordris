@@ -47,16 +47,14 @@ html,body {
   height: 100%;
   top:0;
   left:0;
+  filter: blur(0px);
 }
 .result {
   background-color: #121213;
   color: white;
   position: absolute;
-  min-width:30%;
-  max-width:30%;
   top: 30%;
   left: 50%;
-  height: 10%;
   transform: translate(-50%);
   border-radius: 5px;
   padding: 20px;
@@ -69,10 +67,6 @@ html,body {
   border-radius: 5px;
   font-size: 20px;
   padding-top: 10px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%);
   cursor: pointer;
 }
 .shareicon {

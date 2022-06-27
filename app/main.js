@@ -61,8 +61,16 @@ function calculateScore(guesses, answers) {
 }
 
 function showScore(playerScore) {
-  grid.style.filter = "blur(0.9px)";
-  resultcontainer.style.display = 'block';
+  // Make the scoreboard a child of the grid so it positions nicely. FIXME: A hack.
+  let container = resultcontainer.parentElement.removeChild(resultcontainer);
+  grid.appendChild(container);
+  container.style.display = 'block';
+
+  // Blur the grid.
+  Array.from(document.getElementsByClassName("cell"))
+    .forEach(c => c.style.filter = "blur(0.9px)");
+
+  // Display the score and populate the share button.
   score.textContent = `Score: ${playerScore.score}/${MAX_ROWS*MAX_COLS}`;
   comment.textContent = scoreComments[parseInt(playerScore.score/MAX_COLS, 10)];
   share.onclick = ()=> {
