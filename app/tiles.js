@@ -81,6 +81,18 @@ const tiles = [
     // X
     {x: 0, y: 1},
   ],
+  [
+    //  X
+    // XX
+    {x: 1, y: 0},
+    {x: 1, y: 1},
+  ],
+  [
+    // XX
+    //  X
+    {x: 0, y: 1},
+    {x: -1, y: 1}
+  ],
 ];
 
 function generateTiles(words, rowLength) {
