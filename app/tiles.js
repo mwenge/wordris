@@ -63,6 +63,10 @@ function getRandomInt(max) {
 
 const tiles = [
   [
+    // XX
+    {x: 1, y: 0},
+  ],
+  [
     //  X
     // X
     {x: 1, y: 1},
